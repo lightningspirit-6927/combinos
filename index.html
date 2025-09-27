@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combinos remade</title>
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgb(0, 0, 0)
+        }
+
+        #board {
+            right: 50%;
+            bottom: 50%;
+            transform: translate(50%,50%);
+            position: absolute;
+
+            height: 90vh;
+            width: 70vh;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="board" width="700" height="900"></canvas>
+
+    <script src="allminos.js"></script>
+    <script src="data.js"></script>
+    <script src="board.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
