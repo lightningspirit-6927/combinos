@@ -74,12 +74,8 @@ class Board {
     }
 
     obstructed(minos) {
-        for (const mino of minos) {
-            if (mino.x < 0 || mino.x > BOARD_WIDTH - 1 || mino.y < 0) return true;
-            let row = this.dta[mino.y];
-            if (!row) throw new Error(`what the flippity fuck is this???? (mino.y = ${mino.y}, row = ${JSON.stringify(row)})\n\n` + JSON.stringify(this.dta));
-            else if (row[mino.x] != 0) return true;
-        }
+        for (const mino of minos)
+            if (mino.x < 0 || mino.x > BOARD_WIDTH - 1 || mino.y < 0 || !this.dta[mino.y] || this.dta[mino.y][mino.x] != 0) return true;
 
         return false;
     }

@@ -82,6 +82,7 @@ function playGame(st) {
     let done = false;
 
     function loop(t) {
+        t = performance.now();
 
         // defining new functions every single loop? egregious!
         const lock = function() {
@@ -176,7 +177,7 @@ function playGame(st) {
 
             attach(["softDrop"], key => {
                 let sdr = getHandling("sdr")
-                bMoveY(-(sdr ? Math.min(BOARD_HEIGHT, Math.floor((t - key.lastT) / sdr)) : BOARD_HEIGHT));
+                bMoveY(-(sdr ? Math.max(0, Math.min(BOARD_HEIGHT, Math.floor((t - key.lastT) / sdr))) : BOARD_HEIGHT));
             });
 
             attach(["hardDrop"], key => {
