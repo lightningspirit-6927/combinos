@@ -29,14 +29,16 @@ function drawGame(board, queue, hold, done = false, stats) {
     for (let i = 0; i < 5; i++) {
         if (!queue[i]) break;
         ctx.fillStyle = queue[i].color;
+        let shiftX = Math.min(...queue[i].minos.map(x => x.x));
         for (const mino of queue[i].minos) {
-            ctx.fillRect(550 + SMALL_TILE_SIZE * mino.x, 60 + 100 * i - SMALL_TILE_SIZE * mino.y, SMALL_TILE_SIZE, SMALL_TILE_SIZE);
+            ctx.fillRect(550 + SMALL_TILE_SIZE * (mino.x - shiftX), 60 + 100 * i - SMALL_TILE_SIZE * mino.y, SMALL_TILE_SIZE, SMALL_TILE_SIZE);
         }
     }
     if (hold.piece) {
         ctx.fillStyle = hold.piece.color;
+        let shiftX = Math.max(...hold.piece.minos.map(x => x.x));
         for (const mino of hold.piece.minos) {
-            ctx.fillRect(50 + SMALL_TILE_SIZE * mino.x, 60 - SMALL_TILE_SIZE * mino.y, SMALL_TILE_SIZE, SMALL_TILE_SIZE);
+            ctx.fillRect(50 + SMALL_TILE_SIZE * (mino.x - shiftX + 3), 60 - SMALL_TILE_SIZE * mino.y, SMALL_TILE_SIZE, SMALL_TILE_SIZE);
         }
     }
     ctx.fillStyle = "#f2f2f2";
@@ -47,11 +49,14 @@ function drawGame(board, queue, hold, done = false, stats) {
     ctx.fillText(`Combo: ${stats.combo}`, 120, 300);
 }
 
+// for debugging purposes
+let stats, board, queue, hold;
+
 function playGame(st) {
     let startTime = st || performance.now();
-    let queue = [];
+    queue = [];
 
-    const stats = {
+    stats = {
         piecesPlaced: 0,
         piecesGenerated: 7,
         score: 0,
@@ -62,9 +67,9 @@ function playGame(st) {
         queue.push(selectBlock(i));
     }
 
-    let hold = { canHold: true, piece: undefined };
+    hold = { canHold: true, piece: undefined };
 
-    let board = new Board(spawnLoc(queue.shift()));
+    board = new Board(spawnLoc(queue.shift()));
 
     let lastRender = startTime;
     let lastGravity = startTime;
@@ -138,7 +143,6 @@ function playGame(st) {
 
 
         if (t - lastRender >= 1000 / 60) {
-            console.log(t, lastLock);
             lastRender = t;
             if ((t - lastLock >= 1500 || t - lastSpawn >= 60000) && board.canLock()) lock();
             if (t - lastGravity >= 1000) {
