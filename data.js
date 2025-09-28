@@ -1,7 +1,7 @@
 const DEFAULT_HANDLING = {
-    das: 100,
+    das: 60,
     arr: 0,
-    sdr: 0 // soft drop rate, in ms
+    sdr: 4 // soft drop rate, in ms
 };
 
 const DEFAULT_KEYS = {
@@ -9,9 +9,9 @@ const DEFAULT_KEYS = {
     moveRight: ["ArrowRight"],
     softDrop: ["ArrowDown"],
     hardDrop: ["Space"],
-    rotateCW: ["KeyX", "ArrowUp"],
-    rotateCCW: ["ControlLeft", "ControlRight", "KeyZ"],
+    rotateCW: ["ArrowUp"],
+    rotateCCW: ["KeyZ"],
     rotate180: ["KeyA"],
-    hold: ["ShiftLeft", "ShiftRight", "KeyC"],
-    retry: ["KeyR"],
+    hold: ["KeyC"],
+    retry: ["KeyQ"],
 }
