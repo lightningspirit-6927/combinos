@@ -23,7 +23,7 @@ class PieceLocation {
 }
 
 function spawnLoc(polymino) {
-    return new PieceLocation(polymino, new Vec2(Math.floor(BOARD_WIDTH / 2) - 1, VISIBLE_BOARD_HEIGHT - Math.min(...polymino.minos.map(x => x.y))), 0);
+    return new PieceLocation(polymino, new Vec2(Math.floor(BOARD_WIDTH / 2) - 1, VISIBLE_BOARD_HEIGHT - 1 - Math.min(...polymino.minos.map(x => x.y))), 0);
 }
 
 class Board {
@@ -77,7 +77,7 @@ class Board {
         for (const mino of minos) {
             if (mino.x < 0 || mino.x > BOARD_WIDTH - 1 || mino.y < 0) return true;
             let row = this.dta[mino.y];
-            if (!row) throw new Error(`what the flippity fuck is this???? (mino.y = ${mino.y}, row = ${JSON.stringify(row)})\n\n` + JSON.stringify(this.JSON.stringify(this.dta));
+            if (!row) throw new Error(`what the flippity fuck is this???? (mino.y = ${mino.y}, row = ${JSON.stringify(row)})\n\n` + JSON.stringify(this.JSON.stringify(this.dta)));
             else if (row[mino.x] != 0) return true;
         }
 
