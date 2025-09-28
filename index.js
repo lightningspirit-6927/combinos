@@ -142,7 +142,7 @@ function playGame(st) {
         }
 
 
-        if (t - lastRender >= 1000 / 60) {
+        if (t - lastRender >= 1000 / 10) {
             lastRender = t;
             if ((t - lastLock >= 1500 || t - lastSpawn >= 60000) && board.canLock()) lock();
             if (t - lastGravity >= 1000) {
