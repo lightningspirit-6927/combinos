@@ -10,9 +10,11 @@ window.onkeydown = e => {
 window.onkeyup = e => keysPressed.splice(keysPressed.findIndex(x => x.code == e.code), 1);
 
 function attach(types, action) {
+    let idx = keysPressed.findLastIndex(x => types.some(t => getKey(t, x.code)));
+    if (idx == -1) return;
+    let key = keysPressed[idx];
     for (const type of types) {
-        let idx = keysPressed.findLastIndex(x => getKey(type, x.code));
-        if (idx > -1) {
+        if (getKey(type, key.code)) {
             let key = keysPressed[idx];
             key.type = type;
             action(key);
@@ -50,7 +52,7 @@ function drawGame(board, queue, hold, done = false, stats) {
 }
 
 // for debugging purposes
-let stats, board, queue, hold;
+let stats, board, queue, hold, last;
 
 function playGame(st) {
     let startTime = st || performance.now();
@@ -71,18 +73,20 @@ function playGame(st) {
 
     board = new Board(spawnLoc(queue.shift()));
 
-    let lastRender = startTime;
-    let lastGravity = startTime;
-    let lastLock = startTime;
-    let lastSpawn = startTime;
+    let last = {
+        render: startTime,
+        gravity: startTime,
+        lock: startTime,
+        spawn: startTime
+    };
     let done = false;
 
     function loop(t) {
 
         // defining new functions every single loop? egregious!
         const lock = function() {
-            lastSpawn = t;
-            lastLock = t;
+            last.spawn = t;
+            last.lock = t;
             stats.piecesGenerated++;
             stats.piecesPlaced++;
             queue.push(selectBlock(stats.piecesGenerated));
@@ -107,13 +111,13 @@ function playGame(st) {
         }
 
         const bMoveX = function(...args) {
-            if (board.moveX(...args) && board.canLock()) lastLock = t;
+            if (board.moveX(...args) && board.canLock()) last.lock = t;
         }
         const bMoveY = function(...args) {
-            if (board.moveY(...args) && board.canLock()) lastLock = t;
+            if (board.moveY(...args) && board.canLock()) last.lock = t;
         }
         const bRotate = function(...args) {
-            if (board.rotate(...args) && board.canLock()) lastLock = t;
+            if (board.rotate(...args) && board.canLock()) last.lock = t;
         }
 
 
@@ -142,12 +146,12 @@ function playGame(st) {
         }
 
 
-        if (t - lastRender >= 1000 / 60) {
-            lastRender = t;
-            if ((t - lastLock >= 1500 || t - lastSpawn >= 60000) && board.canLock()) lock();
-            if (t - lastGravity >= 1000) {
+        if (t - last.render >= 1000 / 60) {
+            last.render = t;
+            if ((t - last.lock >= 1500 || t - last.spawn >= 60000) && board.canLock()) lock();
+            if (t - last.gravity >= 1000) {
                 bMoveY(-1);
-                lastGravity = t;
+                last.gravity = t;
             }
             let hint;
             attach(["moveLeft", "moveRight"], key => {
@@ -190,8 +194,8 @@ function playGame(st) {
 
             attach(["hold"], key => {
                 if (key.pressed || !hold.canHold) return;
-                lastSpawn = t;
-                lastLock = t;
+                last.spawn = t;
+                last.lock = t;
                 key.pressed = true;
                 let oldHoldPiece = hold.piece;
                 hold = { canHold: false, piece: board.currentPieceLocation.polymino };
