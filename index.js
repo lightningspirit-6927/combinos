@@ -58,7 +58,7 @@ function playGame(st) {
         combo: 0,
     }
 
-    for (i = 0; i < stats.piecesGenerated; i++) {
+    for (i = stats.piecesPlaced; i < stats.piecesGenerated; i++) {
         queue.push(selectBlock(i));
     }
 
@@ -95,7 +95,7 @@ function playGame(st) {
 
             for (const mino of board.currentPieceLocation.minos()) {
                 if (board.dta[mino.y][mino.x] != 0) {
-                    done = -1;
+                    done = true;
                     break;
                 }
             }
@@ -186,6 +186,8 @@ function playGame(st) {
 
             attach(["hold"], key => {
                 if (key.pressed || !hold.canHold) return;
+                lastSpawn = t;
+                lastLock = t;
                 key.pressed = true;
                 let oldHoldPiece = hold.piece;
                 hold = { canHold: false, piece: board.currentPieceLocation.polymino };

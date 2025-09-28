@@ -84,7 +84,7 @@ class Polymino {
                 centerX += mino.x;
                 centerY += mino.y;
             }
-            let center = new Vec2(Math.floor(centerX / minos.length), Math.floor(centerY / minos.length));
+            let center = new Vec2(Math.round(centerX / minos.length), Math.round(centerY / minos.length));
 
             minos = minos.map(x => x.add(center.neg()));
 
