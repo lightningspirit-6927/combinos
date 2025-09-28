@@ -176,9 +176,10 @@ function playGame(st) {
             });
 
             attach(["softDrop"], key => {
-                let sdr = getHandling("sdr")
-                bMoveY(-(sdr ? Math.max(0, Math.min(BOARD_HEIGHT, Math.floor((t - key.lastT) / sdr))) : BOARD_HEIGHT));
-                key.lastT = t;
+                let sdr = getHandling("sdr");
+                let d = (t - key.lastT) / sdr;
+                bMoveY(-(sdr ? (d >= 1 ? Math.floor(d) : 0) : BOARD_HEIGHT));
+                if (d >= 1) key.lastT = t;
             });
 
             attach(["hardDrop"], key => {
